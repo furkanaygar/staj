@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tr.com.t2.ik.security.JwtTokenUtil;
 import tr.com.t2.ik.ws.dto.JwtRequest;
-
+import org.springframework.web.bind.annotation.*;
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
