@@ -42,7 +42,7 @@ public class T2IKApplication {
             mete.setRoles(new HashSet<>(Arrays.asList(admin, user)));
             mete.setBirthDate("11-11-1990");
             mete.setIdentificationNo("123456780");
-            mete.setStatus("active");
+            mete.setStatus("true");
 
             Personnel tan = new Personnel();
             tan.setUsername("tan.apaydin");
@@ -50,7 +50,7 @@ public class T2IKApplication {
             tan.setRoles(new HashSet<>(Collections.singletonList(user)));
             tan.setBirthDate("04-11-1990");
             tan.setIdentificationNo("11111111");
-            tan.setStatus("active");
+            tan.setStatus("true");
 
             personnelRepository.saveAll(Arrays.asList(mete,tan));
         };

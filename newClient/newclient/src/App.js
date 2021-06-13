@@ -1,27 +1,26 @@
-import './App.css';
-import styled from 'styled-components';
-import { AccountBox } from './components/accountBox';
-import React, { Component } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import Home from './components/Home';
+import Edit from './components/Edit';
+import NavigationBar from './components/NavigationBar';
+import { Layout } from 'antd';
 
-const AppContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  back-ground: #ff0000;
-`;
-const Auth = React.lazy(() => {
-  return import('./components/accountBox/auth');
-});
-
-function App() {
+const App = props => {
   return (
-    <AppContainer>
-      <AccountBox />
-    </AppContainer>
+    <Router>
+      <div>
+        <Layout>
+          <NavigationBar />
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route path='/api/login' component={LoginForm} />
+            <Route path='/about' component={Edit} />
+          </Switch>
+        </Layout>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

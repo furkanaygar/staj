@@ -35,7 +35,9 @@ public class LoginController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
+        System.out.println("girdi");
         return ResponseEntity.ok(token);
+
     }
 
 }
