@@ -18,7 +18,7 @@ import java.text.*;
 
 
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/users")
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -35,6 +35,7 @@ public class UserController {
     @GetMapping
     @RequestMapping("/{username}")
     public PersonnelResponseDTO getPersonnel(@PathVariable("username") String username) {
+        System.out.println("get");
         Optional<Personnel> personnelOptional = personnelRepository.findById(username);
         if (personnelOptional.isPresent()) {
             return PersonnelResponseDTO
@@ -54,6 +55,7 @@ public class UserController {
     @RequestMapping("/{username}/edit")
     @PutMapping
     public void change(@PathVariable("username") String username, @RequestBody JwtRequest authenticationRequest) throws Exception {
+        System.out.print("edit");
 
         Optional<Personnel> person = personnelRepository.findById(username);
         person.get().setBirthDate(authenticationRequest.getBirth_date());

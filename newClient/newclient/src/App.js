@@ -5,6 +5,9 @@ import Home from './components/Home';
 import Edit from './components/Edit';
 import NavigationBar from './components/NavigationBar';
 import { Layout } from 'antd';
+import Logout from './components/Logout';
+import Get from './components/Get';
+const x = localStorage.getItem('username');
 
 const App = props => {
   return (
@@ -15,7 +18,9 @@ const App = props => {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route path='/api/login' component={LoginForm} />
-            <Route path='/about' component={Edit} />
+            <Route path='/api/logout' component={Logout} />
+            <Route path={`/api/users/${x}/edit`} component={Edit} />
+            <Route path={`/api/users/${x}`} component={Get} />
           </Switch>
         </Layout>
       </div>

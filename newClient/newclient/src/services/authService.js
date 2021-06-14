@@ -2,19 +2,25 @@ import axios from 'axios';
 import { setAuthorizationToken } from '../helpers/setAuthorizationToken';
 
 const login = (username, password) => {
-  const authData = { username, password };
-  const url = 'http://localhost:3000/api/login';
   return axios
-    .post(url, authData)
-    .then(user => {
-      const { token } = user.data;
-      localStorage.setItem('jwtToken', token);
-      setAuthorizationToken(token);
-      console.log('girdi');
+    .post('http://localhost:8080/api/login', { username, password })
+    .then(response => {
+      console.log('response', response);
 
-      return user.data;
+      const token = response.data;
+      console.log('token', token);
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+      setAuthorizationToken(token);
+
+      return response.data;
     })
     .catch(err => console.log(err));
 };
 
-export default { login };
+const logout = () => {
+  localStorage.removeItem('token');
+  setAuthorizationToken(false);
+};
+
+export default { login, logout };

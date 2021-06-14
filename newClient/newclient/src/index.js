@@ -9,7 +9,7 @@ import { setAuthorizationToken } from './helpers/setAuthorizationToken';
 import { Provider } from 'react-redux';
 import store from './helpers/store';
 
-const jwtToken = localStorage.getItem('jwtToken');
+const jwtToken = localStorage.getItem('token');
 if (jwtToken) {
   setAuthorizationToken(jwtToken);
 }

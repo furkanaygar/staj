@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, Icon, Button, Alert } from 'antd';
+import { Form, Input, Icon, Button } from 'antd';
 import { connect } from 'react-redux';
+import { login } from '../actions/authAction';
 
 class LoginForm extends Component {
   state = {
@@ -8,17 +9,19 @@ class LoginForm extends Component {
     password: ''
   };
   handleSubmit = e => {
+    e.preventDefault();
     const { dispatch } = this.props;
     const { username, password } = this.state;
     dispatch(login(username, password));
   };
   handleChange = e => {
+    console.log('name', e.target.name, 'value', e.target.value);
     this.setState({
       [e.target.name]: e.target.value
     });
   };
   render() {
-    const { isAuthenticated, error, errorMessage } = this.props;
+    const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
     if (isAuthenticated) this.props.history.push('/');
     return (
@@ -81,7 +84,8 @@ const mapStateToProps = state => {
   const { isAuthenticated, error, errorMessage, user } = state.auth;
   return {
     isAuthenticated,
-
+    error,
+    errorMessage,
     user
   };
 };

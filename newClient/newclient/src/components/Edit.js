@@ -1,15 +1,33 @@
 import React, { Component } from 'react';
+import editBirth from '../services/editService';
 import { Form, Input, Icon, Button } from 'antd';
 
 class Edit extends Component {
+  state = {
+    birthdate: '',
+    tcno: ''
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    const { birth_date, identification_no } = this.state;
+    editBirth(birth_date, identification_no);
+  };
+  handleChange = e => {
+    console.log('name', e.target.name, 'value', e.target.value);
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
   render() {
+    const { isAuthenticated } = this.props;
+    if (isAuthenticated) this.props.history.push('/');
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Form className='edit-form'>
+        <Form onSubmit={this.handleSubmit} className='edit-form'>
           <h1 style={{ textAlign: 'center' }}>Edit</h1>
           <Form.Item>
-            {getFieldDecorator('birth-date', {
+            {getFieldDecorator('birth_date', {
               rules: [
                 { required: false, message: 'Please input your birthday' }
               ]
@@ -17,11 +35,14 @@ class Edit extends Component {
               <Input
                 prefix={<Icon type='rocket' theme='filled' />}
                 placeholder='Birthday'
+                onChange={this.handleChange}
+                required
+                name='birth_date'
               />
             )}
           </Form.Item>
           <Form.Item>
-            {getFieldDecorator('identification-no', {
+            {getFieldDecorator('identification_no', {
               rules: [
                 { required: false, message: 'Please input your Tc number' }
               ]
@@ -29,6 +50,9 @@ class Edit extends Component {
               <Input
                 prefix={<Icon type='notification' theme='filled' />}
                 placeholder='TC No'
+                onChange={this.handleChange}
+                required
+                name='identification_no'
               />
             )}
           </Form.Item>

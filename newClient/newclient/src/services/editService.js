@@ -1,6 +1,12 @@
-const editBirth = birth => {
-  const url = 'http://localhost:3000/api/edit';
-  return axios.post(url, birth).catch(err => console.log(err));
+import axios from 'axios';
+const editBirth = (birth_date, identification_no) => {
+  const x = localStorage.getItem('username');
+  const url = `http://localhost:8080/api/users/${x}/edit`;
+  return axios
+    .put(url, { birth_date: birth_date, identification_no: identification_no })
+    .then(response => {
+      console.log('response', response);
+    });
 };
 
-export default { editBirth };
+export default editBirth;
