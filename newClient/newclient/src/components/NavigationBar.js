@@ -43,7 +43,7 @@ class NavigationBar extends React.Component {
           )}
           {sub ? (
             <Menu.Item key='4'>
-              <Link to={`/api/leaveform`}>Form</Link>
+              <Link to={`/api/form`}>Form</Link>
             </Menu.Item>
           ) : (
             <Menu.Item key='4'>

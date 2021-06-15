@@ -1,31 +1,38 @@
 import React, { Component } from 'react';
-import { Form, Input, Icon, Button, Select } from 'antd';
-import { connect } from 'react-redux';
-import { login } from '../actions/authAction';
+import { Form, Input, Button, Select } from 'antd';
+import leave from '../services/leaveService';
 const { Option } = Select;
 
 class LeaveForm extends Component {
   state = {
     username: '',
-    beginday: '',
-    finishday: '',
-    reason: ''
+    date: '',
+    count: '',
+    reason: '',
+    type: 'option1'
   };
   handleSubmit = e => {
     e.preventDefault();
+    const { username, date, count, reason, type } = this.state;
+    console.log(
+      'username',
+      username,
+      'date',
+      date,
+      'count',
+      count,
+      'reason',
+      reason,
+      'type',
+      type
+    );
+    leave(username, date, count, reason, type);
   };
   handleChange = e => {
     console.log('name', e.target.name, 'value', e.target.value);
     this.setState({
       [e.target.name]: e.target.value
     });
-  };
-  layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 }
-  };
-  tailLayout = {
-    wrapperCol: { span: 8, span: 16 }
   };
 
   render() {
@@ -36,7 +43,7 @@ class LeaveForm extends Component {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form
           labelCol={{
-            span: 9
+            span: 10
           }}
           wrapperCol={{
             span: 18
@@ -71,32 +78,36 @@ class LeaveForm extends Component {
               ]
             })(
               <Input
+                onChange={this.handleChange}
                 type='date'
-                beginday='date'
+                name='date'
                 required
                 placeholder='Begining Date'
-                onChange={this.handleChange}
               />
             )}
           </Form.Item>
-          <Form.Item label='Finish Date'>
-            {getFieldDecorator('dateFinish', {
+          <Form.Item label='How many Day'>
+            {getFieldDecorator('count', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your finish day of holiday'
+                  message: 'Please enter a number'
                 }
               ]
             })(
               <Input
-                type='date'
-                name='finishday'
+                type='primary'
+                name='count'
                 required
                 onChange={this.handleChange}
               />
             )}
           </Form.Item>
-          <Form.Item label=' Option Type' style={{ textAlign: 'center' }}>
+          <Form.Item
+            label=' Option Type'
+            style={{ textAlign: 'center' }}
+            onChange={this.handleChange}
+          >
             {getFieldDecorator('type', {
               rules: [
                 {
@@ -105,9 +116,8 @@ class LeaveForm extends Component {
               ]
             })(
               <Select
-                onChange={this.handleChange}
                 placeholder='Select a option and change input text above'
-                allowClear
+                name='type'
               >
                 <Option value='option1'>option1</Option>
                 <Option value='option2'>option2</Option>
@@ -118,23 +128,17 @@ class LeaveForm extends Component {
 
           <Form.Item
             label='Reason'
-            labelCol={{
-              span: 8
-            }}
             wrapperCol={{
-              span: 100
+              span: 18
             }}
           >
             {getFieldDecorator('reason', {
               rules: [
-                {
-                  required: true,
-                  message: 'Please input reason for permission form'
-                }
+                { required: true, message: 'Please input your username!' }
               ]
             })(
               <Input
-                placeholder='Reason'
+                placeholder='reason'
                 onChange={this.handleChange}
                 required
                 name='reason'
@@ -142,12 +146,12 @@ class LeaveForm extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item style={{ textAlign: 'center' }}>
+          <Form.Item style={{ textAlign: 'left' }}>
             <Button
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='primary'
               htmlType='submit'
-              className='login-form-button'
+              className='leave-form-button'
             >
               Submit Form
             </Button>
