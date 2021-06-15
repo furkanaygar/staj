@@ -5,9 +5,6 @@ import { connect } from 'react-redux';
 import jwtDecode from 'jwt-decode';
 
 const { Header } = Layout;
-const x = localStorage.getItem('username');
-const y = localStorage.getItem('token');
-
 const userInfo = state => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -35,13 +32,22 @@ class NavigationBar extends React.Component {
               <Link to='/api/login'>Login</Link>
             </Menu.Item>
           )}
-          {y ? (
+          {sub ? (
             <Menu.Item key='3'>
-              <Link to={`/api/users/${x}/edit`}>Edit</Link>
+              <Link to={`/api/users/${n}/edit`}>Edit</Link>
             </Menu.Item>
           ) : (
             <Menu.Item key='3'>
               <Link to={`/api/login`}>Edit</Link>
+            </Menu.Item>
+          )}
+          {sub ? (
+            <Menu.Item key='4'>
+              <Link to={`/api/leaveform`}>Form</Link>
+            </Menu.Item>
+          ) : (
+            <Menu.Item key='4'>
+              <Link to={`/api/login`}>Form</Link>
             </Menu.Item>
           )}
         </Menu>

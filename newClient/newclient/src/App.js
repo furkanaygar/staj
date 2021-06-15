@@ -7,6 +7,7 @@ import NavigationBar from './components/NavigationBar';
 import { Layout } from 'antd';
 import Logout from './components/Logout';
 import Get from './components/Get';
+import LeaveForm from './components/LeaveForm';
 const x = localStorage.getItem('username');
 
 const App = props => {
@@ -21,6 +22,7 @@ const App = props => {
             <Route path='/api/logout' component={Logout} />
             <Route path={`/api/users/${x}/edit`} component={Edit} />
             <Route path={`/api/users/${x}`} component={Get} />
+            <Route path='/api/leaveform' component={LeaveForm} />
           </Switch>
         </Layout>
       </div>
