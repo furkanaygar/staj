@@ -6,7 +6,6 @@ const login = (username, password) => {
     .post('http://localhost:8080/api/login', { username, password })
     .then(response => {
       console.log('response', response);
-
       const token = response.data;
       console.log('token', token);
       localStorage.setItem('token', token);
@@ -20,6 +19,7 @@ const login = (username, password) => {
 
 const logout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('username');
   setAuthorizationToken(false);
 };
 

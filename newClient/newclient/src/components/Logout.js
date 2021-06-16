@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'antd';
-import { setAuthorizationToken } from '../helpers/setAuthorizationToken';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logout } from '../actions/authAction';
 
 class Logout extends Component {
   handleSubmit = e => {
     e.preventDefault();
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    setAuthorizationToken(false);
+    const { dispatch } = this.props;
+    dispatch(logout());
   };
 
   render() {
+    const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
+    const a = localStorage.getItem('token');
+    if (!a) {
+      this.props.history.push('/');
+    }
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form className='logout-form'>
@@ -21,16 +26,16 @@ class Logout extends Component {
           <Form.Item>
             {getFieldDecorator('signout')(<h1>Do you want to log out ?</h1>)}
           </Form.Item>
-          <Form.Item style={{ textAlign: 'center' }}>
+          <Form.Item
+            style={{ textAlign: 'center' }}
+            onClick={this.handleSubmit}
+          >
             <Button
-              onClick={this.handleSubmit}
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='link'
               className='logout-form-button'
-              href='http://localhost:3000/'
             >
               Yes
-              <Link to='/'></Link>
             </Button>
           </Form.Item>
           <Form.Item style={{ textAlign: 'center' }}>
@@ -47,5 +52,14 @@ class Logout extends Component {
     );
   }
 }
+const mapStateToProps = props => {
+  const { isAuthenticated, error, errorMessage, user } = props.auth;
+  return {
+    isAuthenticated,
+    error,
+    errorMessage,
+    user
+  };
+};
 const lgout = Form.create()(Logout);
-export default lgout;
+export default connect(mapStateToProps)(lgout);

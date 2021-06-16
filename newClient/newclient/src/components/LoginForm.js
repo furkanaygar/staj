@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input, Icon, Button } from 'antd';
 import { connect } from 'react-redux';
 import { login } from '../actions/authAction';
+import { Link } from 'react-router-dom';
 
 class LoginForm extends Component {
   state = {
@@ -72,6 +73,16 @@ class LoginForm extends Component {
               className='login-form-button'
             >
               Login
+            </Button>
+          </Form.Item>
+          <Form.Item style={{ textAlign: 'center' }}>
+            <Button
+              style={{ marginLeft: 'auto', marginRight: 'auto' }}
+              type='primary'
+              className='login-form-button'
+              href='/api/admin/login'
+            >
+              Admin Login
             </Button>
           </Form.Item>
         </Form>

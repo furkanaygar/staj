@@ -9,7 +9,8 @@ class LeaveForm extends Component {
     date: '',
     count: '',
     reason: '',
-    type: 'option1'
+    type: '',
+    test: false
   };
   handleSubmit = e => {
     e.preventDefault();
@@ -26,6 +27,7 @@ class LeaveForm extends Component {
       'type',
       type
     );
+    this.setState({ test: true });
     leave(username, date, count, reason, type);
   };
   handleChange = e => {
@@ -38,16 +40,11 @@ class LeaveForm extends Component {
   render() {
     const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
-    if (isAuthenticated) this.props.history.push('/');
+    if (isAuthenticated) this.props.history.push('/form');
+    if (this.state.test == true) this.props.history.push('/');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form
-          labelCol={{
-            span: 10
-          }}
-          wrapperCol={{
-            span: 18
-          }}
           layout='horizontal'
           onSubmit={this.handleSubmit}
           className='login-form'
@@ -86,28 +83,24 @@ class LeaveForm extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='How many Day'>
+          <Form.Item label='Finish Date '>
             {getFieldDecorator('count', {
               rules: [
                 {
                   required: true,
-                  message: 'Please enter a number'
+                  message: 'Please enter a date'
                 }
               ]
             })(
               <Input
-                type='primary'
+                type='date'
                 name='count'
                 required
                 onChange={this.handleChange}
               />
             )}
           </Form.Item>
-          <Form.Item
-            label=' Option Type'
-            style={{ textAlign: 'center' }}
-            onChange={this.handleChange}
-          >
+          <Form.Item label='Option Type' onChange={this.handleChange}>
             {getFieldDecorator('type', {
               rules: [
                 {
@@ -119,9 +112,9 @@ class LeaveForm extends Component {
                 placeholder='Select a option and change input text above'
                 name='type'
               >
-                <Option value='option1'>option1</Option>
-                <Option value='option2'>option2</Option>
-                <Option value='opiton3'>option3</Option>
+                <Option value='hastalik'>Hastalık</Option>
+                <Option value='aile'>Aile</Option>
+                <Option value='diger'>Diğer</Option>
               </Select>
             )}
           </Form.Item>

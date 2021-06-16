@@ -14,16 +14,11 @@ import java.util.Collections;
 import java.util.HashSet;
 
 @RestController
-public class AdminController {
-    @GetMapping
-    public String getMethod(Principal principal) {
-        return "Admin Area, Welcome " + principal.getName();
-    }
-
+public class RegisterController {
     @Autowired
     private PersonnelRepository personnelRepository;
 
-    @RequestMapping("/api/admins/add")
+    @RequestMapping("/api/register")
     @PostMapping
     public void add(@RequestBody JwtRequest authenticationRequest){
         Personnel newPerson = new Personnel();
@@ -32,7 +27,7 @@ public class AdminController {
         newPerson.setUsername(authenticationRequest.getUsername());
         newPerson.setPassword(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()));
         //newPerson.setBirthDate(authenticationRequest.getBirth_date());
-       // newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
+        // newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
         newPerson.setRoles(new HashSet<>(Collections.singletonList(user)));
         newPerson.setStatus("active");
         personnelRepository.save(newPerson);

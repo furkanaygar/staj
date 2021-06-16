@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import editBirth from '../services/editService';
 import { Form, Input, Icon, Button } from 'antd';
+import { connect } from 'react-redux';
 
 class Edit extends Component {
   state = {
@@ -20,8 +21,11 @@ class Edit extends Component {
   };
   render() {
     const { isAuthenticated } = this.props;
-    if (isAuthenticated) this.props.history.push('/');
     const { getFieldDecorator } = this.props.form;
+    if (isAuthenticated) {
+      const a = localStorage.getItem('username');
+      this.props.history.push(`/api/users/${a}/edit`);
+    }
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='edit-form'>
@@ -71,5 +75,6 @@ class Edit extends Component {
     );
   }
 }
+
 const EditPage = Form.create()(Edit);
 export default EditPage;

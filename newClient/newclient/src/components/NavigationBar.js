@@ -14,9 +14,9 @@ const userInfo = state => {
 
 class NavigationBar extends React.Component {
   render() {
-    console.log('Aygar', this.props.user.sub);
     const sub = localStorage.getItem('token');
     const n = localStorage.getItem('username');
+    console.log('props', this.props);
     return (
       <Header>
         <Menu theme='dark' mode='horizontal' style={{ lineHeight: '64px' }}>
@@ -38,16 +38,25 @@ class NavigationBar extends React.Component {
             </Menu.Item>
           ) : (
             <Menu.Item key='3'>
-              <Link to={`/api/login`}>Edit</Link>
+              <Link to={'/api/login'}>Edit</Link>
             </Menu.Item>
           )}
           {sub ? (
             <Menu.Item key='4'>
-              <Link to={`/api/form`}>Form</Link>
+              <Link to={'/api/form'}>Form</Link>
             </Menu.Item>
           ) : (
             <Menu.Item key='4'>
-              <Link to={`/api/login`}>Form</Link>
+              <Link to={'/api/login'}>Form</Link>
+            </Menu.Item>
+          )}
+          {sub ? (
+            <Menu.Item style={{ float: 'right' }} key='5'>
+              <Link to={`/`}> </Link>
+            </Menu.Item>
+          ) : (
+            <Menu.Item style={{ float: 'right' }} key='5'>
+              <Link to={`/api/register`}>Register</Link>
             </Menu.Item>
           )}
         </Menu>
