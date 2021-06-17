@@ -6,12 +6,16 @@ import { connect } from 'react-redux';
 class Edit extends Component {
   state = {
     birthdate: '',
-    tcno: ''
+    tcno: '',
+    test: null
   };
   handleSubmit = e => {
     e.preventDefault();
     const { birth_date, identification_no } = this.state;
-    editBirth(birth_date, identification_no);
+    const username = localStorage.getItem('username');
+    console.log(birth_date);
+    editBirth(username, birth_date, identification_no);
+    this.setState({ test: 'true' });
   };
   handleChange = e => {
     console.log('name', e.target.name, 'value', e.target.value);
@@ -20,12 +24,12 @@ class Edit extends Component {
     });
   };
   render() {
-    const { isAuthenticated } = this.props;
+    const isAuthenticated = this.props.isAuthenticated;
     const { getFieldDecorator } = this.props.form;
-    if (isAuthenticated) {
-      const a = localStorage.getItem('username');
-      this.props.history.push(`/api/users/${a}/edit`);
-    }
+
+    console.log('props', this.props);
+    console.log('isauthenticated', isAuthenticated);
+    if (this.state.test) this.props.history.push('/');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='edit-form'>
@@ -75,6 +79,16 @@ class Edit extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
+  return {
+    isAuthenticated,
+    error,
+    errorMessage,
+    user,
+    isAdmin
+  };
+};
 
 const EditPage = Form.create()(Edit);
-export default EditPage;
+export default connect(mapStateToProps)(EditPage);

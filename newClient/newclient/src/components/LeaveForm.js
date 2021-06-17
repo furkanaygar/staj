@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import leave from '../services/leaveService';
+import { connect } from 'react-redux';
 const { Option } = Select;
 
 class LeaveForm extends Component {
@@ -10,7 +11,7 @@ class LeaveForm extends Component {
     count: '',
     reason: '',
     type: '',
-    test: false
+    test: null
   };
   handleSubmit = e => {
     e.preventDefault();
@@ -27,7 +28,7 @@ class LeaveForm extends Component {
       'type',
       type
     );
-    this.setState({ test: true });
+    this.setState({ test: 'true' });
     leave(username, date, count, reason, type);
   };
   handleChange = e => {
@@ -40,8 +41,8 @@ class LeaveForm extends Component {
   render() {
     const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
-    if (isAuthenticated) this.props.history.push('/form');
-    if (this.state.test == true) this.props.history.push('/');
+    console.log('isAuthenticated', isAuthenticated);
+    if (this.state.test) this.props.history.push('/');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form
@@ -154,6 +155,16 @@ class LeaveForm extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
+  return {
+    isAuthenticated,
+    error,
+    errorMessage,
+    user,
+    isAdmin
+  };
+};
 
 const WrappedLeave = Form.create()(LeaveForm);
-export default WrappedLeave;
+export default connect(mapStateToProps)(WrappedLeave);

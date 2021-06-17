@@ -1,12 +1,18 @@
 package tr.com.t2.ik.ws;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import tr.com.t2.ik.model.Personnel;
 import tr.com.t2.ik.model.Role;
 import tr.com.t2.ik.repository.PersonnelRepository;
+import tr.com.t2.ik.security.JwtTokenUtil;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 
 import java.security.Principal;
@@ -15,15 +21,33 @@ import java.util.HashSet;
 
 @RestController
 public class AdminController {
-    @GetMapping
-    public String getMethod(Principal principal) {
-        return "Admin Area, Welcome " + principal.getName();
-    }
 
     @Autowired
     private PersonnelRepository personnelRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-    @RequestMapping("/api/admins/add")
+    @RequestMapping("/api/admin/login")
+    @PostMapping
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
+    {
+        final Authentication authentication;
+        authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+                        authenticationRequest.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtTokenUtil.generateToken(authentication);
+        System.out.println(" admin girdi");
+        return ResponseEntity.ok(token);
+
+    }
+
+
+    @RequestMapping("/api/admin/add")
     @PostMapping
     public void add(@RequestBody JwtRequest authenticationRequest){
         Personnel newPerson = new Personnel();
@@ -38,6 +62,8 @@ public class AdminController {
         personnelRepository.save(newPerson);
 
     }
+
+
 }
 
 

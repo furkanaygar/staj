@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'antd';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { logout } from '../actions/authAction';
 
 class Logout extends Component {
@@ -12,7 +11,6 @@ class Logout extends Component {
   };
 
   render() {
-    const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
     const a = localStorage.getItem('token');
     if (!a) {

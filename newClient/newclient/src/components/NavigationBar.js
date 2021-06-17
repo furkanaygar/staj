@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,11 +12,10 @@ const userInfo = state => {
   } else return state.auth.user;
 };
 
-class NavigationBar extends React.Component {
+class NavigationBar extends Component {
   render() {
     const sub = localStorage.getItem('token');
     const n = localStorage.getItem('username');
-    console.log('props', this.props);
     return (
       <Header>
         <Menu theme='dark' mode='horizontal' style={{ lineHeight: '64px' }}>
@@ -34,7 +33,7 @@ class NavigationBar extends React.Component {
           )}
           {sub ? (
             <Menu.Item key='3'>
-              <Link to={`/api/users/${n}/edit`}>Edit</Link>
+              <Link to={`/api/users/edit`}>Edit</Link>
             </Menu.Item>
           ) : (
             <Menu.Item key='3'>

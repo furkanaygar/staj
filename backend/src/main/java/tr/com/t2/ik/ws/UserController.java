@@ -52,11 +52,11 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping("/{username}/edit")
+    @RequestMapping("/edit")
     @PutMapping
-    public void change(@PathVariable("username") String username, @RequestBody JwtRequest authenticationRequest) throws Exception {
+    public void change(@RequestBody JwtRequest authenticationRequest) throws Exception {
         System.out.print("edit");
-
+        String username = authenticationRequest.getUsername();
         Optional<Personnel> person = personnelRepository.findById(username);
         person.get().setBirthDate(authenticationRequest.getBirth_date());
         person.get().setIdentificationNo(authenticationRequest.getIdentification_no());

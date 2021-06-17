@@ -7,9 +7,9 @@ import NavigationBar from './components/NavigationBar';
 import Logout from './components/Logout';
 import LeaveForm from './components/LeaveForm';
 import Register from './components/Register';
+import AdminLoginForm from './components/AdminLoginForm';
 
 const App = props => {
-  const x = localStorage.getItem('username');
   return (
     <Router>
       <div>
@@ -18,9 +18,10 @@ const App = props => {
           <Route exact path='/' component={Home} />
           <Route path='/api/login' component={LoginForm} />
           <Route path='/api/logout' component={Logout} />
-          <Route path={`/api/users/${x}/edit`} component={Edit} />
+          <Route path={`/api/users/edit`} component={Edit} />
           <Route path='/api/form' component={LeaveForm} />
           <Route path='/api/register' component={Register} />
+          <Route path='/api/admin/login' component={AdminLoginForm} />
         </Switch>
       </div>
     </Router>

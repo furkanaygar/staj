@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Input, Icon, Button } from 'antd';
 import { connect } from 'react-redux';
 import { login } from '../actions/authAction';
-import { Link } from 'react-router-dom';
 
 class LoginForm extends Component {
   state = {
@@ -25,6 +24,7 @@ class LoginForm extends Component {
     const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
     if (isAuthenticated) this.props.history.push('/');
+    console.log('isAuthenticated', isAuthenticated);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='login-form'>
@@ -92,12 +92,13 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const { isAuthenticated, error, errorMessage, user } = state.auth;
+  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
   return {
     isAuthenticated,
     error,
     errorMessage,
-    user
+    user,
+    isAdmin
   };
 };
 
