@@ -20,8 +20,6 @@ import java.text.*;
 import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/users")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class UserController {
 
     @Autowired
@@ -31,9 +29,9 @@ public class UserController {
     public String getMethod() {
         return "User Area, Welcome";
     }
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
-    @RequestMapping("/{username}")
+    @RequestMapping("/api/user/{username}/info")
     public PersonnelResponseDTO getPersonnel(@PathVariable("username") String username) {
         System.out.println("get");
         Optional<Personnel> personnelOptional = personnelRepository.findById(username);
@@ -52,21 +50,20 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping("/edit")
+    @RequestMapping("(/api/user/edit/{username}")
     @PutMapping
-    public void change(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        System.out.print("edit");
+    public void change( @RequestBody JwtRequest authenticationRequest) throws Exception {
         String username = authenticationRequest.getUsername();
+        System.out.print("edit");
         Optional<Personnel> person = personnelRepository.findById(username);
         person.get().setBirthDate(authenticationRequest.getBirth_date());
         person.get().setIdentificationNo(authenticationRequest.getIdentification_no());
-        getPersonnel(username);
         personnelRepository.save(person.get());
 
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping("/{username}/delete")
+    @RequestMapping("/api/user/{username}/delete")
     @DeleteMapping
     public void delete(@PathVariable("username") String username) throws Exception {
 
@@ -78,7 +75,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping("/showall")
+    @RequestMapping("/api/user/showall")
     @GetMapping
     public List<PersonnelResponseDTO> show (){
         List<Personnel> list = new ArrayList<>();
@@ -92,7 +89,7 @@ public class UserController {
        return list1;
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping("/search")
+    @RequestMapping("/api/user/search")
     @PostMapping
     public List<PersonnelResponseDTO> search(@RequestBody JwtRequest abc)throws ParseException{
         SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");

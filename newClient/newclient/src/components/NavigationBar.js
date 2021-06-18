@@ -33,28 +33,36 @@ class NavigationBar extends Component {
           )}
           {sub ? (
             <Menu.Item key='3'>
-              <Link to={`/api/users/edit`}>Edit</Link>
+              <Link to={`/api/user/edit`}>Edit</Link>
             </Menu.Item>
           ) : (
-            <Menu.Item key='3'>
-              <Link to={'/api/login'}>Edit</Link>
-            </Menu.Item>
+            <Menu.Item key='3'></Menu.Item>
           )}
           {sub ? (
             <Menu.Item key='4'>
               <Link to={'/api/form'}>Form</Link>
             </Menu.Item>
           ) : (
-            <Menu.Item key='4'>
-              <Link to={'/api/login'}>Form</Link>
-            </Menu.Item>
+            <Menu.Item key='4'></Menu.Item>
           )}
           {sub ? (
-            <Menu.Item style={{ float: 'right' }} key='5'>
-              <Link to={`/`}> </Link>
+            <Menu.Item key='5'>
+              <Link to={`/api/user/${n}/info`}>User Info</Link>
             </Menu.Item>
           ) : (
-            <Menu.Item style={{ float: 'right' }} key='5'>
+            <Menu.Item></Menu.Item>
+          )}
+          {this.props.isAdmin ? (
+            <Menu.Item key='7'>
+              <Link to='/api/showall'>All Users</Link>
+            </Menu.Item>
+          ) : (
+            <Menu.Item></Menu.Item>
+          )}
+          {sub ? (
+            <Menu.Item></Menu.Item>
+          ) : (
+            <Menu.Item style={{ float: 'right' }} key='6'>
               <Link to={`/api/register`}>Register</Link>
             </Menu.Item>
           )}
@@ -65,8 +73,13 @@ class NavigationBar extends Component {
 }
 
 const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
   return {
-    user: userInfo(state)
+    isAuthenticated,
+    error,
+    errorMessage,
+    user,
+    isAdmin
   };
 };
 

@@ -1,10 +1,16 @@
-import { LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT } from '../actions/authAction';
+import {
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+  LOGOUT,
+  ADMIN_LOGIN_SUCCESS
+} from '../actions/authAction';
 
 const initState = {
   user: '',
-  isAuthenticated: false,
-  error: false,
-  errorMessage: ''
+  isAuthenticated: null,
+  error: null,
+  errorMessage: '',
+  isAdmin: null
 };
 
 const authReducer = (state = initState, action) => {
@@ -15,7 +21,17 @@ const authReducer = (state = initState, action) => {
         user: action.user,
         isAuthenticated: true,
         error: false,
-        errorMessage: ''
+        errorMessage: '',
+        isAdmin: false
+      };
+    case ADMIN_LOGIN_SUCCESS:
+      return {
+        ...state,
+        user: action.user,
+        isAuthenticated: true,
+        error: false,
+        errorMessage: '',
+        isAdmin: true
       };
     case LOGIN_ERROR:
       return {
@@ -23,7 +39,8 @@ const authReducer = (state = initState, action) => {
         user: '',
         error: true,
         isAuthenticated: false,
-        errorMessage: action.error
+        errorMessage: action.error,
+        isAdmin: null
       };
     case LOGOUT:
       return {
