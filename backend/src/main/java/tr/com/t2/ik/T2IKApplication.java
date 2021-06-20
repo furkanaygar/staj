@@ -46,7 +46,7 @@ public class T2IKApplication {
             Personnel mete = new Personnel();
             mete.setUsername("metehan.danaci");
             mete.setPassword(new BCryptPasswordEncoder().encode("mete"));
-            mete.setRoles(new HashSet<>(Arrays.asList(admin,user)));
+            mete.setRoles(new HashSet<>(Collections.singletonList(user)));
             mete.setBirthDate("11-11-1990");
             mete.setIdentificationNo("123456780");
             mete.setStatus("true");

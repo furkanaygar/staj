@@ -14,5 +14,6 @@ public class PersonnelResponseDTO {
     private String dateBirth;
     private String identificationNo;
     private String status;
+    private String reason;
     private Set<Role> roles;
 }

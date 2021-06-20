@@ -5,7 +5,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import tr.com.t2.ik.model.Form;
 import tr.com.t2.ik.model.Personnel;
+import tr.com.t2.ik.repository.FormRepository;
 import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 import tr.com.t2.ik.ws.dto.PersonnelResponseDTO;
@@ -23,7 +25,10 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    public PersonnelRepository personnelRepository;
+    private PersonnelRepository personnelRepository;
+    @Autowired
+    private FormRepository formRepository;
+
 
     @GetMapping
     public String getMethod() {
@@ -35,7 +40,20 @@ public class UserController {
     public PersonnelResponseDTO getPersonnel(@PathVariable("username") String username) {
         System.out.println("get");
         Optional<Personnel> personnelOptional = personnelRepository.findById(username);
-        if (personnelOptional.isPresent()) {
+        Optional<Form> formOptional = formRepository.findById(username);
+        if (personnelOptional.isPresent() && formOptional.isPresent()) {
+            return PersonnelResponseDTO
+                    .builder()
+                    .username(personnelOptional.get().getUsername())
+                    .roles(personnelOptional.get().getRoles())
+                    .dateBirth(personnelOptional.get().getBirthDate())
+                    .identificationNo(personnelOptional.get().getIdentificationNo())
+                    .status(personnelOptional.get().getStatus())
+                    .reason(formOptional.get().getReason())
+                    .build();
+
+        }
+         if(personnelOptional.isPresent() && (!formOptional.isPresent() )){
             return PersonnelResponseDTO
                     .builder()
                     .username(personnelOptional.get().getUsername())

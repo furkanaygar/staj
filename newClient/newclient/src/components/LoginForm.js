@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Icon, Button } from 'antd';
 import { connect } from 'react-redux';
-import { login } from '../actions/authAction';
+import { adminlogin, login } from '../actions/authAction';
 
 class LoginForm extends Component {
   state = {
@@ -12,7 +12,11 @@ class LoginForm extends Component {
     e.preventDefault();
     const { dispatch } = this.props;
     const { username, password } = this.state;
-    dispatch(login(username, password));
+    if (username === 'adminT2') {
+      dispatch(adminlogin(username, password));
+    } else {
+      dispatch(login(username, password));
+    }
   };
   handleChange = e => {
     console.log('name', e.target.name, 'value', e.target.value);
@@ -27,7 +31,7 @@ class LoginForm extends Component {
     console.log('isAuthenticated', isAuthenticated);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Form onSubmit={this.handleSubmit} className='login-form'>
+        <Form onSubmit={this.handleSubmit} className='LoginForm'>
           <h1 style={{ textAlign: 'center' }}>Login</h1>
           <Form.Item>
             {getFieldDecorator('username', {
@@ -73,16 +77,6 @@ class LoginForm extends Component {
               className='login-form-button'
             >
               Login
-            </Button>
-          </Form.Item>
-          <Form.Item style={{ textAlign: 'center' }}>
-            <Button
-              style={{ marginLeft: 'auto', marginRight: 'auto' }}
-              type='primary'
-              className='login-form-button'
-              href='/api/admin/login'
-            >
-              Admin Login
             </Button>
           </Form.Item>
         </Form>

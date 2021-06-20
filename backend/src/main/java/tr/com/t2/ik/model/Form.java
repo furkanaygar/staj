@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 @Entity
 public class Form {
@@ -29,6 +30,8 @@ public class Form {
     private String type;
     @Column
     private String reason;
+
+
 
 
 

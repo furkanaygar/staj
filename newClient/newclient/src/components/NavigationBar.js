@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import jwtDecode from 'jwt-decode';
 
 const { Header } = Layout;
-const userInfo = state => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    return jwtDecode(token);
-  } else return state.auth.user;
-};
 
 class NavigationBar extends Component {
   render() {

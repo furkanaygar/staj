@@ -12,6 +12,7 @@ import tr.com.t2.ik.ws.dto.JwtRequest;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @RestController
 public class RegisterController {
@@ -20,17 +21,22 @@ public class RegisterController {
 
     @RequestMapping("/api/register")
     @PostMapping
-    public void add(@RequestBody JwtRequest authenticationRequest){
-        Personnel newPerson = new Personnel();
-        Role user = new Role();
-        user.setName("ROLE_USER");
-        newPerson.setUsername(authenticationRequest.getUsername());
-        newPerson.setPassword(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()));
-        //newPerson.setBirthDate(authenticationRequest.getBirth_date());
-        // newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
-        newPerson.setRoles(new HashSet<>(Collections.singletonList(user)));
-        newPerson.setStatus("active");
-        personnelRepository.save(newPerson);
+    public void add(@RequestBody JwtRequest authenticationRequest) {
+        Optional<Personnel> abc = personnelRepository.findById(authenticationRequest.getUsername());
+        if (!abc.isPresent()) {
+            Personnel newPerson = new Personnel();
+            Role user = new Role();
+            user.setName("ROLE_USER");
+            newPerson.setUsername(authenticationRequest.getUsername());
+            newPerson.setPassword(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()));
+            newPerson.setBirthDate(authenticationRequest.getBirth_date());
+            newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
+            newPerson.setRoles(new HashSet<>(Collections.singletonList(user)));
+            newPerson.setStatus("true");
+            personnelRepository.save(newPerson);
+        }
+        else
+            return;
 
     }
 }
