@@ -10,16 +10,13 @@ import tr.com.t2.ik.model.Personnel;
 import tr.com.t2.ik.repository.FormRepository;
 import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.ws.dto.JwtRequest;
+import tr.com.t2.ik.ws.dto.LeaveFormResponseDTO;
 import tr.com.t2.ik.ws.dto.PersonnelResponseDTO;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.text.*;
 
-
-import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class UserController {
@@ -40,20 +37,8 @@ public class UserController {
     public PersonnelResponseDTO getPersonnel(@PathVariable("username") String username) {
         System.out.println("get");
         Optional<Personnel> personnelOptional = personnelRepository.findById(username);
-        Optional<Form> formOptional = formRepository.findById(username);
-        if (personnelOptional.isPresent() && formOptional.isPresent()) {
-            return PersonnelResponseDTO
-                    .builder()
-                    .username(personnelOptional.get().getUsername())
-                    .roles(personnelOptional.get().getRoles())
-                    .dateBirth(personnelOptional.get().getBirthDate())
-                    .identificationNo(personnelOptional.get().getIdentificationNo())
-                    .status(personnelOptional.get().getStatus())
-                    .reason(formOptional.get().getReason())
-                    .build();
-
-        }
-         if(personnelOptional.isPresent() && (!formOptional.isPresent() )){
+       // Optional<Form> formOptional = formRepository.findById(username);
+        if (personnelOptional.isPresent()) {
             return PersonnelResponseDTO
                     .builder()
                     .username(personnelOptional.get().getUsername())
@@ -66,13 +51,29 @@ public class UserController {
         }
         return null;
     }
+    public LeaveFormResponseDTO getForm(int id) {
+        System.out.println("get");
+        Optional<Form> formOptional = formRepository.findById(id);
+        if (formOptional.isPresent()) {
+            return LeaveFormResponseDTO
+                    .builder()
+                    .id(formOptional.get().getId())
+                    .username(formOptional.get().getUsername())
+                    .finishDate(formOptional.get().getCount())
+                    .startDate(formOptional.get().getCount())
+                    .reason(formOptional.get().getReason())
+                    .build();
+
+        }
+        return null;
+    }
+
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping("(/api/user/edit/{username}")
+    @RequestMapping("/api/user/edit")
     @PutMapping
-    public void change( @RequestBody JwtRequest authenticationRequest) throws Exception {
+    public void change(@RequestBody JwtRequest authenticationRequest) throws Exception {
         String username = authenticationRequest.getUsername();
-        System.out.print("edit");
         Optional<Personnel> person = personnelRepository.findById(username);
         person.get().setBirthDate(authenticationRequest.getBirth_date());
         person.get().setIdentificationNo(authenticationRequest.getIdentification_no());
@@ -105,6 +106,21 @@ public class UserController {
 
 
        return list1;
+    }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping("/api/forms/{username}")
+    @GetMapping
+    public List<LeaveFormResponseDTO> showForms (@PathVariable("username") String username){
+        List<Form> list = new ArrayList<>();
+        formRepository.findAll().forEach(list::add);
+        List<LeaveFormResponseDTO> list1 = new ArrayList<>();
+        for (int i =0; i<list.size();i++) {
+            if(username.equals(list.get(i).getUsername())){
+                list1.add( getForm(list.get(i).getId()));
+            }
+        }
+        return list1;
+
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/api/user/search")

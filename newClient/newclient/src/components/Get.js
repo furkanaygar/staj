@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class Get extends Component {
   state = {
     username: '',
     dateBirth: '',
-    identificationNo: '',
-    reason: 'The user does not have a leave form.'
+    identificationNo: ''
   };
   // Çalışma Sıralaması 1. constructor 2. componentWillMount 3. render 4. componentDidMount
   componentWillMount() {
@@ -16,26 +17,45 @@ class Get extends Component {
       this.setState({
         username: response.data.username,
         dateBirth: response.data.dateBirth,
-        identificationNo: response.data.identificationNo,
-        reason: response.data.reason
+        identificationNo: response.data.identificationNo
       });
     });
   }
 
   render() {
-    const { username, dateBirth, identificationNo, reason } = this.state;
+    const { isAuthenticated } = this.props;
+    console.log('isAuthenticated,', isAuthenticated);
+    if (!isAuthenticated) this.props.history.push('/');
+    const { username, dateBirth, identificationNo } = this.state;
     return (
       <div>
         Username: {username}
         <br></br>
-        Birt Date: {dateBirth}
+        Birth Date: {dateBirth}
         <br></br>
-        Identification No:{identificationNo}
+        Identification No: {identificationNo}
         <br></br>
-        LeaveForm Reason:{reason}
+        <Link
+          to={{
+            pathname: `/api/forms/${username}`,
+            state: username
+          }}
+        >
+          Show {username}'s All Forms
+        </Link>
       </div>
     );
   }
 }
+const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
+  return {
+    isAuthenticated,
+    error,
+    errorMessage,
+    user,
+    isAdmin
+  };
+};
 
-export default Get;
+export default connect(mapStateToProps)(Get);

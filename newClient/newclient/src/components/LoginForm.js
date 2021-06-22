@@ -86,13 +86,14 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const { isAuthenticated, error, errorMessage, user, isAdmin } = state.auth;
+  const { isAuthenticated, error, errorMessage, user, isAdmin,control } = state.auth;
   return {
     isAuthenticated,
     error,
     errorMessage,
     user,
-    isAdmin
+    isAdmin,
+    control
   };
 };
 

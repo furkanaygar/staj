@@ -2,14 +2,7 @@ package tr.com.t2.ik.model;
 
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +12,12 @@ import java.util.Set;
 public class Form {
 
     @Id
+    @GeneratedValue
+    private int id;
     @Column
     private String username;
     @Column
     private String date;
-
     @Column
     private String count;
     @Column

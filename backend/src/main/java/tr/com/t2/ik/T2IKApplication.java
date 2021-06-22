@@ -9,12 +9,12 @@ import tr.com.t2.ik.model.Personnel;
 import tr.com.t2.ik.model.Role;
 import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.repository.RoleRepository;
+import tr.com.t2.ik.repository.FormRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
+
 
 @SpringBootApplication
 public class T2IKApplication {
@@ -32,6 +32,8 @@ public class T2IKApplication {
 
             Role user = new Role();
             user.setName("ROLE_USER");
+
+
 
             roleRepository.saveAll(Arrays.asList(admin,user));
 
@@ -52,6 +54,9 @@ public class T2IKApplication {
             mete.setStatus("true");
 
 
+
+
+
             Personnel tan = new Personnel();
             tan.setUsername("tan.apaydin");
             tan.setPassword(new BCryptPasswordEncoder().encode("tan"));
@@ -59,6 +64,7 @@ public class T2IKApplication {
             tan.setBirthDate("04-11-1990");
             tan.setIdentificationNo("11111111");
             tan.setStatus("true");
+
 
             personnelRepository.saveAll(Arrays.asList(adminT2,tan,mete));
         };

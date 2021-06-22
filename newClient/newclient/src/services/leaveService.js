@@ -5,8 +5,7 @@ const leave = (username, date, count, reason, type) => {
     username,
     date,
     count,
-    reason,
-    type
+    reason
   });
 };
 

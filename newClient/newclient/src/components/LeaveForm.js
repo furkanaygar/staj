@@ -29,7 +29,9 @@ class LeaveForm extends Component {
       type
     );
     this.setState({ test: 'true' });
-    leave(username, date, count, reason, type);
+    if (username === localStorage.getItem('username')) {
+      leave(username, date, count, reason);
+    }
   };
   handleChange = e => {
     console.log('name', e.target.name, 'value', e.target.value);
@@ -43,6 +45,7 @@ class LeaveForm extends Component {
     const { getFieldDecorator } = this.props.form;
     console.log('isAuthenticated', isAuthenticated);
     if (this.state.test) this.props.history.push('/');
+    if (!isAuthenticated) this.props.history.push('/');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form
@@ -101,7 +104,11 @@ class LeaveForm extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='Option Type' onChange={this.handleChange}>
+          <Form.Item
+            name='type'
+            label='Option Type'
+            onChange={this.handleChange}
+          >
             {getFieldDecorator('type', {
               rules: [
                 {
@@ -109,10 +116,7 @@ class LeaveForm extends Component {
                 }
               ]
             })(
-              <Select
-                placeholder='Select a option and change input text above'
-                name='type'
-              >
+              <Select placeholder='Select a option and change input text above'>
                 <Option value='hastalik'>Hastalık</Option>
                 <Option value='aile'>Aile</Option>
                 <Option value='diger'>Diğer</Option>

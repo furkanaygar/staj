@@ -7,10 +7,11 @@ import {
 
 const initState = {
   user: '',
-  isAuthenticated: null,
+  isAuthenticated: false,
   error: null,
   errorMessage: '',
-  isAdmin: null
+  isAdmin: null,
+  control: ''
 };
 
 const authReducer = (state = initState, action) => {
@@ -22,7 +23,8 @@ const authReducer = (state = initState, action) => {
         isAuthenticated: true,
         error: false,
         errorMessage: '',
-        isAdmin: false
+        isAdmin: false,
+        control: ''
       };
     case ADMIN_LOGIN_SUCCESS:
       return {
@@ -31,8 +33,10 @@ const authReducer = (state = initState, action) => {
         isAuthenticated: true,
         error: false,
         errorMessage: '',
-        isAdmin: true
+        isAdmin: true,
+        control: ''
       };
+
     case LOGIN_ERROR:
       return {
         ...state,
@@ -40,11 +44,13 @@ const authReducer = (state = initState, action) => {
         error: true,
         isAuthenticated: false,
         errorMessage: action.error,
-        isAdmin: null
+        isAdmin: null,
+        control: ''
       };
     case LOGOUT:
       return {
-        user: ''
+        user: '',
+        isAuthenticated: false
       };
     default:
       return state;

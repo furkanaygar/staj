@@ -29,22 +29,28 @@ public class AdminController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @RequestMapping("/api/admin/login")
+   /* @RequestMapping("/api/admin/login")
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
     {
+        System.out.println("1");
         final Authentication authentication;
         authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()
                 )
         );
+        System.out.println("2");
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("3");
         final String token = jwtTokenUtil.generateToken(authentication);
+        System.out.println("4");
         System.out.println(" admin girdi");
+        System.out.println("5");
         return ResponseEntity.ok(token);
 
-    }
+
+    }*/
 
 
     @RequestMapping("/api/admin/add")
