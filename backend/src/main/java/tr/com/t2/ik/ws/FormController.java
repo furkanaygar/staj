@@ -21,19 +21,17 @@ public class FormController {
     @Autowired
     private FormRepository formRepository;
     @PostMapping
-    public void add(@RequestBody JwtRequest authenticationRequest){
+    public void add(@RequestBody JwtRequest input){
 
         Form newform = new Form();
-        String name = authenticationRequest.getUsername();
-        //Optional <Personnel> personnel = personnelRepository.findById(name);
-        newform.setUsername(authenticationRequest.getUsername());
-        newform.setDate(authenticationRequest.getDate());
-        newform.setCount(authenticationRequest.getCount());
-        newform.setReason(authenticationRequest.getReason());
+        newform.setUsername(input.getUsername());
+        newform.setDate(input.getDate());
+        newform.setCount(input.getCount());
+        newform.setReason(input.getReason());
+        newform.setType(input.getType());
         formRepository.save(newform);
-        //personnel.get().setForms(new HashSet<>(Arrays.asList(newform)));
         System.out.println("form");
-        //personnelRepository.save(personnel.get());
+
 
     }
 }

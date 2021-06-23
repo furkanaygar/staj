@@ -1,8 +1,6 @@
 package tr.com.t2.ik.ws;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tr.com.t2.ik.model.Form;
@@ -12,7 +10,6 @@ import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 import tr.com.t2.ik.ws.dto.LeaveFormResponseDTO;
 import tr.com.t2.ik.ws.dto.PersonnelResponseDTO;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.text.*;
@@ -62,6 +59,7 @@ public class UserController {
                     .finishDate(formOptional.get().getCount())
                     .startDate(formOptional.get().getCount())
                     .reason(formOptional.get().getReason())
+                    .type(formOptional.get().getType())
                     .build();
 
         }
@@ -107,7 +105,7 @@ public class UserController {
 
        return list1;
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/api/forms/{username}")
     @GetMapping
     public List<LeaveFormResponseDTO> showForms (@PathVariable("username") String username){

@@ -10,20 +10,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tr.com.t2.ik.model.Personnel;
+import tr.com.t2.ik.model.Role;
+import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.security.JwtTokenUtil;
+import tr.com.t2.ik.ws.dto.ControlResponseDTO;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 import org.springframework.web.bind.annotation.*;
+import  java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/login")
+
 public class LoginController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    PersonnelRepository personnelRepository;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
+    @RequestMapping("/api/login")
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
     {
@@ -37,6 +46,40 @@ public class LoginController {
         final String token = jwtTokenUtil.generateToken(authentication);
         System.out.println("girdi");
         return ResponseEntity.ok(token);
+
+    }
+    @RequestMapping("/api/login/control")
+    @PostMapping
+    public ControlResponseDTO Control(@RequestBody JwtRequest input){
+        Optional<Personnel> personnelOptional = personnelRepository.findById(input.getUsername());
+        List<Role> roleList = new ArrayList<>();
+        boolean test1 =false;
+        for (Role x : personnelOptional.get().getRoles()){
+            roleList.add(x);
+        }
+        for(int x = 0; x<roleList.size(); x++){
+
+           if (roleList.get(x).getName().equals("ROLE_ADMIN")){
+               test1=true;
+
+               break;
+           }
+           else
+               test1 = false;
+        }
+        System.out.println("3" + test1);
+        if(test1==true){
+            return ControlResponseDTO
+                    .builder()
+                    .test(true)
+                    .build();
+        }
+        else
+            return ControlResponseDTO
+                    .builder()
+                    .test(false)
+                    .build();
+
 
     }
 

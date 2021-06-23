@@ -13,60 +13,55 @@ import tr.com.t2.ik.model.Personnel;
 import tr.com.t2.ik.model.Role;
 import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.security.JwtTokenUtil;
+import tr.com.t2.ik.ws.dto.JwtRegisterNewRequest;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @RestController
 public class AdminController {
 
     @Autowired
     private PersonnelRepository personnelRepository;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-   /* @RequestMapping("/api/admin/login")
-    @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
-    {
-        System.out.println("1");
-        final Authentication authentication;
-        authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()
-                )
-        );
-        System.out.println("2");
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("3");
-        final String token = jwtTokenUtil.generateToken(authentication);
-        System.out.println("4");
-        System.out.println(" admin girdi");
-        System.out.println("5");
-        return ResponseEntity.ok(token);
-
-
-    }*/
-
 
     @RequestMapping("/api/admin/add")
     @PostMapping
-    public void add(@RequestBody JwtRequest authenticationRequest){
-        Personnel newPerson = new Personnel();
+    public void add(@RequestBody JwtRegisterNewRequest input) {
         Role user = new Role();
         user.setName("ROLE_USER");
-        newPerson.setUsername(authenticationRequest.getUsername());
-        newPerson.setPassword(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()));
-        //newPerson.setBirthDate(authenticationRequest.getBirth_date());
-       // newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
-        newPerson.setRoles(new HashSet<>(Collections.singletonList(user)));
-        newPerson.setStatus("active");
-        personnelRepository.save(newPerson);
+        Role admin = new Role();
+        admin.setName("ROLE_ADMIN");
+        Optional<Personnel> abc = personnelRepository.findById(input.getUsername());
+        if (!abc.isPresent()) {
 
+            if (input.getRole().equals("admin")) {
+                Personnel newPerson = new Personnel();
+                newPerson.setUsername(input.getUsername());
+                newPerson.setPassword(new BCryptPasswordEncoder().encode(input.getPassword()));
+                newPerson.setBirthDate(input.getBirth_date());
+                newPerson.setIdentificationNo(input.getIdentification_no());
+                newPerson.setRoles(new HashSet<>(Arrays.asList(admin, user)));
+                newPerson.setStatus("active");
+                personnelRepository.save(newPerson);
+            }
+            else  {
+                Personnel newPerson = new Personnel();
+                newPerson.setUsername(input.getUsername());
+                newPerson.setPassword(new BCryptPasswordEncoder().encode(input.getPassword()));
+                newPerson.setBirthDate(input.getBirth_date());
+                newPerson.setIdentificationNo(input.getIdentification_no());
+                newPerson.setRoles(new HashSet<>(Collections.singleton(user)));
+                newPerson.setStatus("active");
+                personnelRepository.save(newPerson);
+            }
+        }
+
+    else
+        return;
     }
 
 

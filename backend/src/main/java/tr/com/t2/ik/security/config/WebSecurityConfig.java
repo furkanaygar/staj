@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .deny()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/register").permitAll()
+                .antMatchers("/api/login","/api/register","/api/login/control").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

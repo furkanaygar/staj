@@ -13,6 +13,7 @@ public class LeaveFormResponseDTO {
     private String startDate;
     private String finishDate;
     private String reason;
+    private String type;
     private int id;
     private Set<Form> forms;
 }

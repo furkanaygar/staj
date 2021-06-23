@@ -2,24 +2,27 @@ import React, { Component } from 'react';
 import { Form, Input, Icon, Button } from 'antd';
 import { connect } from 'react-redux';
 import { adminlogin, login } from '../actions/authAction';
-
+import authService from '../services/authService';
 class LoginForm extends Component {
   state = {
     username: '',
-    password: ''
+    password: '',
+    test: ''
   };
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch } = this.props;
     const { username, password } = this.state;
-    if (username === 'adminT2') {
-      dispatch(adminlogin(username, password));
-    } else {
-      dispatch(login(username, password));
-    }
+    authService.control(username).then(res => {
+      this.setState({ test: res.test });
+      if (this.state.test) {
+        dispatch(adminlogin(username, password));
+      } else {
+        dispatch(login(username, password));
+      }
+    });
   };
   handleChange = e => {
-    console.log('name', e.target.name, 'value', e.target.value);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -28,7 +31,6 @@ class LoginForm extends Component {
     const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
     if (isAuthenticated) this.props.history.push('/');
-    console.log('isAuthenticated', isAuthenticated);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='LoginForm'>
@@ -86,7 +88,8 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const { isAuthenticated, error, errorMessage, user, isAdmin,control } = state.auth;
+  const { isAuthenticated, error, errorMessage, user, isAdmin, control } =
+    state.auth;
   return {
     isAuthenticated,
     error,

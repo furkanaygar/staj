@@ -23,8 +23,7 @@ const authReducer = (state = initState, action) => {
         isAuthenticated: true,
         error: false,
         errorMessage: '',
-        isAdmin: false,
-        control: ''
+        isAdmin: false
       };
     case ADMIN_LOGIN_SUCCESS:
       return {
@@ -33,8 +32,7 @@ const authReducer = (state = initState, action) => {
         isAuthenticated: true,
         error: false,
         errorMessage: '',
-        isAdmin: true,
-        control: ''
+        isAdmin: true
       };
 
     case LOGIN_ERROR:
@@ -44,8 +42,7 @@ const authReducer = (state = initState, action) => {
         error: true,
         isAuthenticated: false,
         errorMessage: action.error,
-        isAdmin: null,
-        control: ''
+        isAdmin: null
       };
     case LOGOUT:
       return {

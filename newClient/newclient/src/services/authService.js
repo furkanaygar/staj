@@ -6,13 +6,18 @@ const login = (username, password) => {
   return axios
     .post('http://localhost:8080/api/login', { username, password })
     .then(response => {
-      console.log('response', response);
       const token = response.data;
-      console.log('token', token);
       localStorage.setItem('token', token);
       localStorage.setItem('username', username);
       setAuthorizationToken(token);
-
+      return response.data;
+    })
+    .catch(err => console.log(err));
+};
+const control = username => {
+  return axios
+    .post('http://localhost:8080/api/login/control', { username })
+    .then(response => {
       return response.data;
     })
     .catch(err => console.log(err));
@@ -21,7 +26,6 @@ const adminlogin = (username, password) => {
   return axios
     .post('http://localhost:8080/api/login', { username, password })
     .then(response => {
-      console.log('response', response);
       const token = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('username', username);
@@ -38,4 +42,4 @@ const logout = () => {
   return <Redirect to='/'></Redirect>;
 };
 
-export default { login, logout, adminlogin };
+export default { control, login, logout, adminlogin };

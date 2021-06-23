@@ -67,8 +67,15 @@ class NavigationBar extends Component {
                 <Menu.Item></Menu.Item>
               )}
               {this.props.isAdmin ? (
-                <Menu.Item key='7'>
+                <Menu.Item key='6'>
                   <Link to='/api/showall'>Show All Users</Link>
+                </Menu.Item>
+              ) : (
+                <></>
+              )}
+              {this.props.isAdmin ? (
+                <Menu.Item key='7'>
+                  <Link to='/api/addUser'>Add New User</Link>
                 </Menu.Item>
               ) : (
                 <></>

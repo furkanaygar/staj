@@ -9,6 +9,7 @@ import Register from './components/Register';
 import Get from './components/Get';
 import AllUsers from './components/AllUsers';
 import GetForms from './components/GetForms';
+import RegisterAdmin from './components/RegisterAdmin';
 const App = props => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = props => {
           <Route path='/api/user' component={Get} />
           <Route path='/api/showall' component={AllUsers} />
           <Route path='/api/forms' component={GetForms} />
+          <Route path='/api/addUser' component={RegisterAdmin} />
         </Switch>
       </div>
     </Router>

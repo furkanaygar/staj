@@ -21,18 +21,18 @@ public class RegisterController {
 
     @RequestMapping("/api/register")
     @PostMapping
-    public void add(@RequestBody JwtRequest authenticationRequest) {
-        Optional<Personnel> abc = personnelRepository.findById(authenticationRequest.getUsername());
+    public void add(@RequestBody JwtRequest input) {
+        Optional<Personnel> abc = personnelRepository.findById(input.getUsername());
         if (!abc.isPresent()) {
             Personnel newPerson = new Personnel();
             Role user = new Role();
             user.setName("ROLE_USER");
-            newPerson.setUsername(authenticationRequest.getUsername());
-            newPerson.setPassword(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()));
-            newPerson.setBirthDate(authenticationRequest.getBirth_date());
-            newPerson.setIdentificationNo(authenticationRequest.getIdentification_no());
+            newPerson.setUsername(input.getUsername());
+            newPerson.setPassword(new BCryptPasswordEncoder().encode(input.getPassword()));
+            newPerson.setBirthDate(input.getBirth_date());
+            newPerson.setIdentificationNo(input.getIdentification_no());
             newPerson.setRoles(new HashSet<>(Collections.singletonList(user)));
-            newPerson.setStatus("true");
+            newPerson.setStatus("active");
             personnelRepository.save(newPerson);
         }
         else
