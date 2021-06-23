@@ -38,7 +38,7 @@ class AllUsers extends Component {
               <Link
                 to={{
                   pathname: `/api/forms/${item.username}`,
-                  state: item.username // your data array of objects
+                  state: item.username 
                 }}
               >
                 Show {item.username}'s All Forms

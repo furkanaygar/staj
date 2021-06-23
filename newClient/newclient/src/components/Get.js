@@ -24,7 +24,6 @@ class Get extends Component {
 
   render() {
     const { isAuthenticated } = this.props;
-    console.log('isAuthenticated,', isAuthenticated);
     if (!isAuthenticated) this.props.history.push('/');
     const { username, dateBirth, identificationNo } = this.state;
     return (

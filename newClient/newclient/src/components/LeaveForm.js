@@ -28,9 +28,10 @@ class LeaveForm extends Component {
       'type',
       type
     );
-    this.setState({ test: 'true' });
+
     if (username === localStorage.getItem('username')) {
       leave(username, date, count, reason, type);
+      this.setState({ test: 'true' });
     }
   };
   handleChange = e => {

@@ -17,10 +17,13 @@ class GetForms extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props;
+    if (!isAuthenticated) this.props.history.push('/');
     const renderItems = this.state.posts.map((item, i) => {
       console.log('start', item.username);
       return (
         <ul>
+          <br></br>
           <li key={i}>
             <div>
               Username:{item.username}
@@ -32,6 +35,8 @@ class GetForms extends Component {
               Leave Form Reason:{item.reason}
               <br></br>
               Leave Form Type:{item.type}
+              <br></br>
+              <br></br>
             </div>
           </li>
         </ul>
