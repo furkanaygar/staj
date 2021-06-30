@@ -22,6 +22,14 @@ const control = username => {
     })
     .catch(err => console.log(err));
 };
+const controlIsActive = username => {
+  return axios
+    .post('http://localhost:8080/api/login/control/active', { username })
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => console.log(err));
+};
 const adminlogin = (username, password) => {
   return axios
     .post('http://localhost:8080/api/login', { username, password })
@@ -42,4 +50,4 @@ const logout = () => {
   return <Redirect to='/'></Redirect>;
 };
 
-export default { control, login, logout, adminlogin };
+export default { control, login, logout, adminlogin, controlIsActive };

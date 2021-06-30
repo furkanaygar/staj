@@ -1,111 +1,83 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import leave from '../services/leaveService';
 import { connect } from 'react-redux';
-const { Option } = Select;
+import './Get.css';
+const { TextArea } = Input;
 
 class LeaveForm extends Component {
   state = {
-    username: '',
+    username: localStorage.getItem('username'),
     date: '',
     count: '',
     reason: '',
     type: '',
-    test: null
+    test: null,
+    duration: ''
   };
   handleSubmit = e => {
     e.preventDefault();
-    const { username, date, count, reason, type } = this.state;
-    console.log(
-      'username',
-      username,
-      'date',
-      date,
-      'count',
-      count,
-      'reason',
-      reason,
-      'type',
-      type
-    );
-
-    if (username === localStorage.getItem('username')) {
-      leave(username, date, count, reason, type);
-      this.setState({ test: 'true' });
+    const { username, date, count, reason, type, duration } = this.state;
+    if (type !== '') {
+      if (type !== 'Mazeret') {
+        leave(username, date, count, reason, type, duration);
+        this.setState({ test: 'true' });
+      } else {
+        leave(username, date, date, reason, type, duration);
+        this.setState({ test: 'true' });
+      }
+      message.success('İzin Formu Başarılı Bir Şekilde Oluşturuldu!');
+    } else {
+      message.error('Lütfen İzin Türünü Giriniz!');
     }
   };
   handleChange = e => {
-    console.log('name', e.target.name, 'value', e.target.value);
     this.setState({
       [e.target.name]: e.target.value
     });
   };
 
   render() {
+    var today = new Date().toISOString().split('T')[0];
     const { isAuthenticated } = this.props;
     const { getFieldDecorator } = this.props.form;
-    console.log('isAuthenticated', isAuthenticated);
+    if (this.state.count != '' && this.state.date != '') {
+      var msDiff =
+        new Date(this.state.count).getTime() -
+        new Date(this.state.date).getTime();
+      var difference = '';
+      var a = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+      difference = difference + a;
+      this.state.duration = difference;
+    }
+    if (this.state.type === 'Mazeret') {
+      this.state.date = '' + today;
+    }
     if (this.state.test) this.props.history.push('/');
     if (!isAuthenticated) this.props.history.push('/');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Form
-          layout='horizontal'
-          onSubmit={this.handleSubmit}
-          className='login-form'
-        >
-          <h1 style={{ textAlign: 'center' }}> Leave Form</h1>
-          <Form.Item label='Username'>
+        <Form layout='horizontal' onSubmit={this.handleSubmit}>
+          <h1 style={{ textAlign: 'left', marginTop: '3px' }}>
+            {' '}
+            İzin Formu Oluştur
+          </h1>
+          <Form.Item label='Kullanıcı Adı'>
             {getFieldDecorator('username', {
-              rules: [
-                { required: true, message: 'Please input your username!' }
-              ]
+              initialValue: localStorage.getItem('username'),
+              disabled: false,
+              rules: [{ required: true }]
             })(
               <Input
-                placeholder='Username'
-                onChange={this.handleChange}
                 required
                 name='username'
-                type='username'
+                type='text'
+                placeholder='Kullanıcı Adı'
+                readOnly
               />
             )}
           </Form.Item>
-          <Form.Item label='Start Date:'>
-            {getFieldDecorator('date', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input your starting day for leaving'
-                }
-              ]
-            })(
-              <Input
-                onChange={this.handleChange}
-                type='date'
-                name='date'
-                required
-                placeholder='Begining Date'
-              />
-            )}
-          </Form.Item>
-          <Form.Item label='Finish Date '>
-            {getFieldDecorator('count', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please enter a date'
-                }
-              ]
-            })(
-              <Input
-                type='date'
-                name='count'
-                required
-                onChange={this.handleChange}
-              />
-            )}
-          </Form.Item>
-          <Form.Item name='type' label='Option Type'>
+          <Form.Item name='type' label='İzin Türü'>
             {getFieldDecorator('type', {
               rules: [
                 {
@@ -114,47 +86,141 @@ class LeaveForm extends Component {
               ]
             })(
               <select
-                placeholder='Select a option and change input text above'
                 value={this.state.value}
                 onChange={this.handleChange}
                 name='type'
+                required
               >
-                <option selected='true' disabled='disabled'></option>
+                <option readOnly selected='true' disabled='disabled'>
+                  İzin Türü Seç
+                </option>
+                <option value='Mazeret'>Mazeret</option>
                 <option value='Hastalık'>Hastalık</option>
+                <option value='Tatil'>Tatil</option>
                 <option value='Aile'>Aile</option>
                 <option value='Diğer'>Diğer</option>
               </select>
             )}
           </Form.Item>
+          {this.state.type !== 'Mazeret' ? (
+            <Form.Item label='Başlangıç Tarihi'>
+              {getFieldDecorator('date', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Lütfen Başlangıç Tarihini Seçiniz!'
+                  }
+                ]
+              })(
+                <Input
+                  onChange={this.handleChange}
+                  type='date'
+                  name='date'
+                  required
+                  min={today}
+                />
+              )}
+            </Form.Item>
+          ) : (
+            <Form.Item label='Başlangıç Tarihi'>
+              {getFieldDecorator('date', {
+                initialValue: today,
+                rules: [
+                  {
+                    required: true,
+                    message: 'Lütfen Başlangıç Tarihini Seçiniz!'
+                  }
+                ]
+              })(
+                <Input
+                  onChange={this.handleChange}
+                  type='date'
+                  name='date'
+                  value={today}
+                  required
+                  readOnly
+                />
+              )}
+            </Form.Item>
+          )}
+          {this.state.type !== 'Mazeret' ? (
+            <Form.Item label='Bitiş Tarihi '>
+              {getFieldDecorator('count', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Lütfen Bitiş Tarihini Seçiniz!'
+                  }
+                ]
+              })(
+                <Input
+                  type='date'
+                  name='count'
+                  required
+                  onChange={this.handleChange}
+                  min={this.state.date}
+                />
+              )}
+            </Form.Item>
+          ) : null}
 
-          <Form.Item
-            label='Reason'
-            wrapperCol={{
-              span: 18
-            }}
-          >
+          <Form.Item label='İzin Açıklaması'>
             {getFieldDecorator('reason', {
               rules: [
-                { required: true, message: 'Please input your username!' }
+                {
+                  required: true,
+                  message: 'Lütfen İzin Açıklaması Seçiniz!'
+                }
               ]
             })(
-              <Input
-                placeholder='reason'
+              <TextArea
+                rows={3}
+                placeholder='İzin Açıklaması'
                 onChange={this.handleChange}
                 required
                 name='reason'
-                type='reason'
+                type='text'
+                style={{ width: '100%', height: '100%' }}
+                size='large'
               />
             )}
           </Form.Item>
-          <Form.Item style={{ textAlign: 'left' }}>
+          {this.state.type !== 'Mazeret' ? (
+            <Form.Item required='true' label='İzin Süresi(gün)'>
+              <Input
+                name='duration'
+                value={difference}
+                readOnly
+                placeholder='İzin Süresi'
+              />
+            </Form.Item>
+          ) : (
+            <Form.Item label='İzin Süresi(saat)'>
+              {getFieldDecorator('duration', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Lütfen Bir Saat Giriniz!'
+                  }
+                ]
+              })(
+                <Input
+                  onChange={this.handleChange}
+                  type='text'
+                  name='duration'
+                  required
+                />
+              )}
+            </Form.Item>
+          )}
+          <Form.Item style={{ textAlign: 'center' }}>
             <Button
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='primary'
               htmlType='submit'
               className='leave-form-button'
             >
-              Submit Form
+              Formu Oluştur
             </Button>
           </Form.Item>
         </Form>

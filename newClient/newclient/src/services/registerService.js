@@ -9,7 +9,7 @@ const register = (username, password, birth_date, identification_no) => {
       identification_no
     })
     .then(response => {
-      return true;
+      return response.data.test;
     })
     .catch(err => console.log(err));
 };
@@ -29,7 +29,7 @@ const addUserAdmin = (
       role
     })
     .then(response => {
-      return true;
+      return response.data.test;
     })
     .catch(err => console.log(err));
 };

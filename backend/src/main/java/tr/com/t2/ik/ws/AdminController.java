@@ -13,6 +13,7 @@ import tr.com.t2.ik.model.Personnel;
 import tr.com.t2.ik.model.Role;
 import tr.com.t2.ik.repository.PersonnelRepository;
 import tr.com.t2.ik.security.JwtTokenUtil;
+import tr.com.t2.ik.ws.dto.ControlResponseDTO;
 import tr.com.t2.ik.ws.dto.JwtRegisterNewRequest;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 
@@ -27,14 +28,15 @@ public class AdminController {
 
     @Autowired
     private PersonnelRepository personnelRepository;
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/api/admin/add")
     @PostMapping
-    public void add(@RequestBody JwtRegisterNewRequest input) {
+    public ControlResponseDTO add(@RequestBody JwtRegisterNewRequest input) {
         Role user = new Role();
         user.setName("ROLE_USER");
         Role admin = new Role();
         admin.setName("ROLE_ADMIN");
+        boolean test1 =false;
         Optional<Personnel> abc = personnelRepository.findById(input.getUsername());
         if (!abc.isPresent()) {
 
@@ -45,8 +47,9 @@ public class AdminController {
                 newPerson.setBirthDate(input.getBirth_date());
                 newPerson.setIdentificationNo(input.getIdentification_no());
                 newPerson.setRoles(new HashSet<>(Arrays.asList(admin, user)));
-                newPerson.setStatus("active");
+                newPerson.setStatus("Aktif");
                 personnelRepository.save(newPerson);
+                test1=true;
             }
             else  {
                 Personnel newPerson = new Personnel();
@@ -55,13 +58,24 @@ public class AdminController {
                 newPerson.setBirthDate(input.getBirth_date());
                 newPerson.setIdentificationNo(input.getIdentification_no());
                 newPerson.setRoles(new HashSet<>(Collections.singleton(user)));
-                newPerson.setStatus("active");
+                newPerson.setStatus("Aktif");
                 personnelRepository.save(newPerson);
+                test1=true;
             }
         }
 
-    else
-        return;
+        if(test1==true){
+            return ControlResponseDTO
+                    .builder()
+                    .test(true)
+                    .build();
+        }
+        else
+            return ControlResponseDTO
+                    .builder()
+                    .test(false)
+                    .build();
+
     }
 
 

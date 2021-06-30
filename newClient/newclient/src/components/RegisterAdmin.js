@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
-import register from '../services/registerService';
 import registerService from '../services/registerService';
 
 class RegisterAdmin extends Component {
@@ -19,8 +18,16 @@ class RegisterAdmin extends Component {
     registerService
       .addUserAdmin(username, password, birth_date, identification_no, role)
       .then(res => {
-        if (res) this.props.history.push('/api/login');
-      });
+        if (res) {
+          this.props.history.push('/');
+          message.success('Kayıt Başarılı!');
+        } else {
+          message.error(
+            'Kullanıcı İsmi Kullanılmaktatır! Farklı Bir Kullanıcı İsmi Kullanın!'
+          );
+        }
+      })
+      .catch(err => console.log(err));
 
     this.setState({ test: true });
   };
@@ -36,13 +43,15 @@ class RegisterAdmin extends Component {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='login-form'>
-          <h1 style={{ textAlign: 'center' }}>Add New User</h1>
-          <Form.Item label='Username'>
+          <h1 style={{ textAlign: 'center', marginTop: '3px' }}>
+            Yeni Kullanıcı Ekle
+          </h1>
+          <Form.Item label='Kullanıcı Adı'>
             {getFieldDecorator('username', {
-              rules: [{ required: true, message: 'Please input username!' }]
+              rules: [{ required: true, message: 'Lütfen Kullanıcı İsminizi Giriniz!' }]
             })(
               <Input
-                placeholder='Username'
+                placeholder='Kullanıcı Adı'
                 onChange={this.handleChange}
                 required
                 name='username'
@@ -50,22 +59,22 @@ class RegisterAdmin extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='Password'>
+          <Form.Item label='Şifre'>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Please input Password!' }]
+              rules: [{ required: true, message: 'Lütfen Şifrenizi Giriniz!' }]
             })(
               <Input
                 type='password'
                 name='password'
                 required
-                placeholder='Password'
+                placeholder='Şifre'
                 onChange={this.handleChange}
               />
             )}
           </Form.Item>
-          <Form.Item label='Birth Date'>
+          <Form.Item label='Doğum Tarihi'>
             {getFieldDecorator('birth_date', {
-              rules: [{ required: true, message: 'Please input birth date!' }]
+              rules: [{ required: true, message: 'Lütfen Doğum Tarihinizi Giriniz!!' }]
             })(
               <Input
                 type='date'
@@ -75,19 +84,20 @@ class RegisterAdmin extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='Identification Number'>
+          <Form.Item label='TC Kimlik Numarası'>
             {getFieldDecorator('identification_no', {
-              rules: [{ required: true, message: 'Please input ID number!' }]
+              rules: [{ required: true, message: 'Lütfen TC Kimlik Numaranızı Giriniz!' }]
             })(
               <Input
                 type='primary'
                 name='identification_no'
                 required
                 onChange={this.handleChange}
+                placeholder='TC Kimlik Numarası'
               />
             )}
           </Form.Item>
-          <Form.Item name='type' label='Option Type'>
+          <Form.Item name='type' label='Kullanıcı Türü'>
             {getFieldDecorator('role', {
               rules: [
                 {
@@ -96,24 +106,26 @@ class RegisterAdmin extends Component {
               ]
             })(
               <select
-                placeholder='Select role type of User'
                 value={this.state.value}
                 onChange={this.handleChange}
                 name='role'
+                required
               >
+                <option selected='false' disabled='disabled'>
+                  Kullanıcı Türü Seç
+                </option>
                 <option value='user'>User</option>
                 <option value='admin'>Admin</option>
               </select>
             )}
           </Form.Item>
-          <Form.Item style={{ textAlign: 'left' }}>
+          <Form.Item style={{ textAlign: 'center' }}>
             <Button
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='primary'
               htmlType='submit'
-              className='login-form-button'
             >
-              Register
+              Yeni Kullanıcı Ekle
             </Button>
           </Form.Item>
         </Form>

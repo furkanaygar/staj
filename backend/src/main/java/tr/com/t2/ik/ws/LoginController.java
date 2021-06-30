@@ -17,6 +17,8 @@ import tr.com.t2.ik.security.JwtTokenUtil;
 import tr.com.t2.ik.ws.dto.ControlResponseDTO;
 import tr.com.t2.ik.ws.dto.JwtRequest;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import  java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class LoginController {
     private JwtTokenUtil jwtTokenUtil;
     @RequestMapping("/api/login")
     @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws IOException
     {
         final Authentication authentication;
         authentication = authenticationManager.authenticate(
@@ -44,30 +46,57 @@ public class LoginController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
-        System.out.println("girdi");
         return ResponseEntity.ok(token);
 
     }
+    // Admin olup olmamasına bakıyoruz
     @RequestMapping("/api/login/control")
     @PostMapping
-    public ControlResponseDTO Control(@RequestBody JwtRequest input){
+    public ControlResponseDTO Control(@RequestBody JwtRequest input) throws IOException{
         Optional<Personnel> personnelOptional = personnelRepository.findById(input.getUsername());
         List<Role> roleList = new ArrayList<>();
         boolean test1 =false;
-        for (Role x : personnelOptional.get().getRoles()){
-            roleList.add(x);
-        }
-        for(int x = 0; x<roleList.size(); x++){
+        if(personnelOptional.isPresent()) {
+            for (Role x : personnelOptional.get().getRoles()) {
+                roleList.add(x);
+            }
+            for (int x = 0; x < roleList.size(); x++) {
 
-           if (roleList.get(x).getName().equals("ROLE_ADMIN")){
-               test1=true;
+                if (roleList.get(x).getName().equals("ROLE_ADMIN")) {
+                    test1 = true;
 
-               break;
-           }
-           else
-               test1 = false;
+                    break;
+                } else
+                    test1 = false;
+            }
         }
-        System.out.println("3" + test1);
+        if(test1==true){
+            return ControlResponseDTO
+                    .builder()
+                    .test(true)
+                    .build();
+        }
+        else
+            return ControlResponseDTO
+                    .builder()
+                    .test(false)
+                    .build();
+
+
+    }
+    @RequestMapping("/api/login/control/active")
+    @PostMapping
+    // Userin active olup olmamasına bakıyoruz
+    public ControlResponseDTO ControlisActive(@RequestBody JwtRequest input) throws IOException{
+        Optional<Personnel> personnelOptional = personnelRepository.findById(input.getUsername());
+        boolean test1 =false;
+        if(personnelOptional.isPresent()) {
+            if (personnelOptional.get().getStatus().equals("Aktif")) {
+                test1 = true;
+            } else {
+                test1 = false;
+            }
+        }
         if(test1==true){
             return ControlResponseDTO
                     .builder()

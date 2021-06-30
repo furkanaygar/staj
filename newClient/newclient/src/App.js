@@ -10,9 +10,10 @@ import Get from './components/Get';
 import AllUsers from './components/AllUsers';
 import GetForms from './components/GetForms';
 import RegisterAdmin from './components/RegisterAdmin';
+import './App.css';
 const App = props => {
   return (
-    <Router>
+    <Router >
       <div>
         <NavigationBar />
         <Switch>

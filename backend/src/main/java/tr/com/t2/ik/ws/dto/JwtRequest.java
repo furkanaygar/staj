@@ -14,6 +14,8 @@ public class JwtRequest implements Serializable {
     private String reason;
     private String type;
     private String role;
+    private String duration;
+    private int id;
 
 
     // need default constructor for JSON Parsing
@@ -28,12 +30,14 @@ public class JwtRequest implements Serializable {
         this.setIdentificationNo(identification_no);
 
     }
-    public JwtRequest(String username, String date, String count, String reason, String type) {
+    public JwtRequest(String username, String date, String count, String reason, String type, int id,String duration) {
         this.setUsername(username);
         this.setDate(date);
         this.setType(type);
         this.setReason(reason);
         this.setCount(count);
+        this.setId(id);
+        this.setDuration(duration);
     }
 
 
@@ -84,5 +88,17 @@ public class JwtRequest implements Serializable {
     public String getType(){return this.type;}
     public void setReason(String reason){this.reason = reason;}
     public String getReason(){return this.reason;};
+    public void setId(int id){
+        this.id=id;
+    }
+    public int getId(){
+        return this.id;
+    }
+    public void setDuration(String duration){
+        this.duration =duration;
+    }
+    public String getDuration(){
+        return this.duration;
+    }
 
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Icon, Button } from 'antd';
+import { Form, Input, Icon, Button, message } from 'antd';
 import { connect } from 'react-redux';
 import { adminlogin, login } from '../actions/authAction';
 import authService from '../services/authService';
@@ -7,20 +7,36 @@ class LoginForm extends Component {
   state = {
     username: '',
     password: '',
-    test: ''
+    test1: '',
+    isActive: ''
   };
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch } = this.props;
     const { username, password } = this.state;
-    authService.control(username).then(res => {
-      this.setState({ test: res.test });
-      if (this.state.test) {
-        dispatch(adminlogin(username, password));
-      } else {
-        dispatch(login(username, password));
-      }
-    });
+    authService
+      .controlIsActive(username)
+      .then(resp => {
+        this.setState({ isActive: resp.test });
+        if (this.state.isActive) {
+          authService
+            .control(username)
+            .then(res => {
+              this.setState({ test1: res.test });
+              if (this.state.test1) {
+                dispatch(adminlogin(username, password));
+                message.success('Giriş Başarılı!');
+              } else {
+                dispatch(login(username, password));
+                message.success('Giriş Başarılı!');
+              }
+            })
+            .catch(err => console.log(err));
+        } else {
+          message.error('Hesap Bulunamadı!');
+        }
+      })
+      .catch(err => console.log(err));
   };
   handleChange = e => {
     this.setState({
@@ -34,18 +50,18 @@ class LoginForm extends Component {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='LoginForm'>
-          <h1 style={{ textAlign: 'center' }}>Login</h1>
+          <h1 style={{ textAlign: 'center', marginTop: '3px' }}>Giriş Yap</h1>
           <Form.Item>
             {getFieldDecorator('username', {
               rules: [
-                { required: true, message: 'Please input your username!' }
+                { required: true, message: 'Lütfen Kullanıcı Adınızı Giriniz!' }
               ]
             })(
               <Input
                 prefix={
                   <Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder='Username'
+                placeholder='Kullanıcı Adı'
                 onChange={this.handleChange}
                 required
                 name='username'
@@ -56,7 +72,7 @@ class LoginForm extends Component {
           <Form.Item>
             {getFieldDecorator('password', {
               rules: [
-                { required: true, message: 'Please input your Password!' }
+                { required: true, message: 'Lütfen Şifrenizi Giriniz!' }
               ]
             })(
               <Input
@@ -66,7 +82,7 @@ class LoginForm extends Component {
                 type='password'
                 name='password'
                 required
-                placeholder='Password'
+                placeholder='Şifre'
                 onChange={this.handleChange}
               />
             )}

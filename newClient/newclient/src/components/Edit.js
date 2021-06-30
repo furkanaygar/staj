@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import editBirth from '../services/editService';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 class Edit extends Component {
   state = {
@@ -9,15 +10,30 @@ class Edit extends Component {
     tcno: '',
     test: null
   };
+
+  componentWillMount() {
+    const n = localStorage.getItem('username');
+    const url = `http://localhost:8080/api/user/${n}/info`;
+    axios
+      .get(url)
+      .then(response => {
+        this.setState({
+          birthdate: response.data.dateBirth,
+          tcno: response.data.identificationNo
+        });
+      })
+      .catch(err => console.log(err));
+  }
   handleSubmit = e => {
     e.preventDefault();
-    const { birth_date, identification_no } = this.state;
+    const { birthdate, tcno } = this.state;
+    console.log('birtdate', birthdate, 'tc', tcno);
     const username = localStorage.getItem('username');
-    editBirth(username, birth_date, identification_no);
+    editBirth(username, birthdate, tcno);
     this.setState({ test: 'true' });
+    message.success(' Kullanıcı Bilgisi Başarılı Bir Şekilde Düzenlendi!');
   };
   handleChange = e => {
-    console.log('name', e.target.name, 'value', e.target.value);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -32,45 +48,45 @@ class Edit extends Component {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='edit-form'>
-          <h1 style={{ textAlign: 'center' }}>Edit</h1>
-          <Form.Item label='Birth Day'>
+          <h1 style={{ textAlign: 'center' }}>Kullanıcı Bilgisi Düzenle</h1>
+
+          <Form.Item label='Doğum Tarihi'>
             {getFieldDecorator('birth_date', {
+              initialValue: this.state.birthdate,
               rules: [
-                { required: false, message: 'Please input your birthday' }
+                { required: false, message: 'Lütfen Doğum Tarihi Giriniz!' }
               ]
             })(
               <Input
-                // prefix={<Icon type='rocket' theme='filled' />}
-                placeholder='Birthday'
+                type='date'
+                name='birthdate'
                 onChange={this.handleChange}
-                required
-                name='birth_date'
               />
             )}
           </Form.Item>
-          <Form.Item label='ID No'>
-            {getFieldDecorator('identification_no', {
+          <Form.Item label='TC Kimlik Numarası'>
+            {getFieldDecorator('tcno', {
+              initialValue: this.state.tcno,
               rules: [
-                { required: false, message: 'Please input your ID number' }
+                { required: false, message: 'Lütfen TC Kimlik Numarası Giriniz!' }
               ]
             })(
               <Input
                 // prefix={<Icon type='notification' theme='filled' />}
-                placeholder='ID No'
+                placeholder='TC Kimlik Numarası'
                 onChange={this.handleChange}
-                required
-                name='identification_no'
+                name='tcno'
               />
             )}
           </Form.Item>
-          <Form.Item style={{ textAlign: 'left' }}>
+          <Form.Item style={{ textAlign: 'center' }}>
             <Button
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='primary'
               htmlType='submit'
               className='edit-form-button'
             >
-              Edit
+              Düzenle
             </Button>
           </Form.Item>
         </Form>

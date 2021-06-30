@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
-import register from '../services/registerService';
 import registerService from '../services/registerService';
 
 class RegisterForm extends Component {
@@ -15,9 +14,19 @@ class RegisterForm extends Component {
     e.preventDefault();
     const { username, password, birth_date, identification_no } = this.state;
 
-    registerService.register(username, password, birth_date, identification_no).then(res => {
-      if (res) this.props.history.push('/api/login');
-    });
+    registerService
+      .register(username, password, birth_date, identification_no)
+      .then(res => {
+        if (res) {
+          this.props.history.push('/api/login');
+          message.success('Kayıt Başarılı!');
+        } else {
+          message.error(
+            'Kullanıcı İsmi Kullanılmaktatır! Farklı Bir Kullanıcı İsmi Kullanın!'
+          );
+        }
+      })
+      .catch(err => console.log(err));
   };
   handleChange = e => {
     console.log('name', e.target.name, 'value', e.target.value);
@@ -27,19 +36,21 @@ class RegisterForm extends Component {
   };
   render() {
     const { getFieldDecorator } = this.props.form;
-    // if (this.state.test) this.props.history.push('/api/login');
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Form onSubmit={this.handleSubmit} className='login-form'>
-          <h1 style={{ textAlign: 'center' }}>Register</h1>
-          <Form.Item label='Username'>
+          <h1 style={{ textAlign: 'center', marginTop: '3px' }}>Kayıt Ol</h1>
+          <Form.Item label='Kullanıcı Adı'>
             {getFieldDecorator('username', {
               rules: [
-                { required: true, message: 'Please input your username!' }
+                {
+                  required: true,
+                  message: 'Lütfen Kullanıcı İsminizi Giriniz!'
+                }
               ]
             })(
               <Input
-                placeholder='Username'
+                placeholder='Kullanıcı Adı'
                 onChange={this.handleChange}
                 required
                 name='username'
@@ -47,25 +58,23 @@ class RegisterForm extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='Password'>
+          <Form.Item label='Şifre'>
             {getFieldDecorator('password', {
-              rules: [
-                { required: true, message: 'Please input your Password!' }
-              ]
+              rules: [{ required: true, message: 'Lütfen Şifrenizi Giriniz!' }]
             })(
               <Input
                 type='password'
                 name='password'
                 required
-                placeholder='Password'
+                placeholder='Şifre'
                 onChange={this.handleChange}
               />
             )}
           </Form.Item>
-          <Form.Item label='Birth Date'>
+          <Form.Item label='Doğum Tarihi '>
             {getFieldDecorator('birth_date', {
               rules: [
-                { required: true, message: 'Please input your birth date!' }
+                { required: true, message: 'Lütfen Doğum Tarihinizi Giriniz!' }
               ]
             })(
               <Input
@@ -76,10 +85,13 @@ class RegisterForm extends Component {
               />
             )}
           </Form.Item>
-          <Form.Item label='Identification Number'>
+          <Form.Item label='TC Kimlik Numarası'>
             {getFieldDecorator('identification_no', {
               rules: [
-                { required: true, message: 'Please input your ID number!' }
+                {
+                  required: true,
+                  message: 'Lütfen TC Kimlik Numaranızı Giriniz!'
+                }
               ]
             })(
               <Input
@@ -87,6 +99,7 @@ class RegisterForm extends Component {
                 name='identification_no'
                 required
                 onChange={this.handleChange}
+                placeholder='TC Kimlik Numarası'
               />
             )}
           </Form.Item>
@@ -95,9 +108,8 @@ class RegisterForm extends Component {
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
               type='primary'
               htmlType='submit'
-              className='login-form-button'
             >
-              Register
+              Kayıt Ol
             </Button>
           </Form.Item>
         </Form>

@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class Form {
+public class LeaveForm {
 
     @Id
     @GeneratedValue
@@ -17,13 +17,18 @@ public class Form {
     @Column
     private String username;
     @Column
-    private String date;
+    private String startdate;
     @Column
-    private String count;
+    private String finishdate;
     @Column
     private String type;
     @Column
     private String reason;
+    @Column
+    private String status;
+    @Column
+    private String duration;
+
 
 
 

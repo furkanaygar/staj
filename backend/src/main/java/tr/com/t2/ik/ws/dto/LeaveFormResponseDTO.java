@@ -2,7 +2,7 @@ package tr.com.t2.ik.ws.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import tr.com.t2.ik.model.Form;
+import tr.com.t2.ik.model.LeaveForm;
 import java.util.Set;
 
 @Data
@@ -14,6 +14,8 @@ public class LeaveFormResponseDTO {
     private String finishDate;
     private String reason;
     private String type;
+    private String status;
     private int id;
-    private Set<Form> forms;
+    private String duration;
+    private Set<LeaveForm> forms;
 }
